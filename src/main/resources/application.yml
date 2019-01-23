@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/uploadfile?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+  mvc:
+    view:
+      prefix: /templates/
+      suffix: .ftl
+    static-path-pattern: /static/**
+server:
+  servlet:
+    context-path: /bigfile
