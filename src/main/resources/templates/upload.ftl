@@ -8,13 +8,13 @@
         var i = -1;
         var shardSize = 1 * 1024 * 1024;    //以1MB为一个分片
         var succeed = 0;
-        var databgein;  //开始时间
-        var dataend;    //结束时间
+        var dataBegin;  //开始时间
+        var dataEnd;    //结束时间
         var action = false;
         var page = {
             init: function () {
                 $("#upload").click(function () {
-                    databgein = new Date();
+                    dataBegin = new Date();
                     var file = $("#file")[0].files[0];  //文件对象
                     isUpload(file);
                 });
@@ -29,8 +29,8 @@
             var r = new FileReader();
             r.readAsBinaryString(file);
             $(r).load(function(e){
-                var bolb = e.target.result;
-                var md5 = hex_md5(bolb);
+                var blob = e.target.result;
+                var md5 = hex_md5(blob);
                 form.append("md5", md5);
                 //Ajax提交
                 $.ajax({
@@ -77,11 +77,11 @@
             var form = new FormData();
             if (!action) {
                 form.append("action", "check");  //检测分片是否上传
-                $("#param").append("action==check ");
+                $("#param").append("<br/>" + "action==check " + "&nbsp;&nbsp;");
             } else {
                 form.append("action", "upload");  //直接上传分片
                 form.append("data", file.slice(start, end));  //slice方法用于切出文件的一部分
-                $("#param").append("action==upload ");
+                $("#param").append("<br/>" + "action==upload ");
             }
             form.append("uuid", uuid);
             form.append("md5", md5);
@@ -92,7 +92,7 @@
             form.append("index", i+1);        //当前是第几片
 
             var index = i+1;
-            $("#param").append("index==" + index + "<br/>");
+            $("#param").append("index==" + index);
             //按大小切割文件段　　
             var data = file.slice(start, end);
             var r = new FileReader();
@@ -129,9 +129,11 @@
                             $("#output").text(succeed + " / " + shardCount);
                             //服务器返回分片是否上传成功
                             if (succeed  == shardCount) {
-                                dataend = new Date();
+                                dataEnd = new Date();
                                 $("#uuid").append(fileuuid);
-                                $("#useTime").append(dataend.getTime() - databgein.getTime());
+                                $("#useTime").append((dataEnd.getTime() - dataBegin.getTime())/1000);
+                                $("#useTime").append("s")
+                                $("#param").append("<br/>" + "上传成功！");
                             }
                         }
                     }, error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -144,19 +146,16 @@
 </head>
 
 <body>
-<input type="file" id="file"/>
+
+<input type="file" id="file" />
 <button id="upload">上传</button>
-<span id="output" style="font-size:12px">等待</span>
+<br/><br/>
+<span style="font-size:16px">上传进度：</span><span id="output" style="font-size:16px"></span>
+<span id="useTime" style="font-size:16px;margin-left:20px;">上传时间：</span>
+<span id="uuid" style="font-size:16px;margin-left:20px;">文件ID：</span>
+<br/><br/>
+<span id="param" style="font-size:16px">上传过程：</span>
 
-<span id="useTime" style="font-size:12px;margin-left:20px;">用时</span>
-
-<span id="uuid" style="font-size:12px;margin-left:20px;">uuid==</span>
-<br/>
-
-<br/>
-<br/>
-<br/>
-<span id="param" style="font-size:12px;margin-left:20px;">param==</span>
 </body>
 </html>
 
