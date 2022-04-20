@@ -74,10 +74,10 @@ public class UploadFileServiceImpl implements UploadFileService {
     public Map<String, Object> realUpload(FileForm form, MultipartFile multipartFile) throws Exception {
         String action = form.getAction();
         String fileId = form.getUuid();
-        Integer index = Integer.valueOf(form.getIndex());
+        int index = Integer.parseInt(form.getIndex());
         String partMd5 = form.getPartMd5();
         String md5 = form.getMd5();
-        Integer total = Integer.valueOf(form.getTotal());
+        int total = Integer.parseInt(form.getTotal());
         String fileName = form.getName();
         String size = form.getSize();
         String suffix = NameUtil.getExtensionName(fileName);
